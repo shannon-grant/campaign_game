@@ -41,3 +41,10 @@ get_data(api_data4)
 Question.make_reward
 
 
+new_user = User.new(username: "shan", password: "1234", account_balance: 0)
+new_user.save
+#binding.pry
+new_game = Game.new(charitable_campaign: "hunger", correct: true, user_id: new_user.id, question_id: Question.all.first.id)
+new_game.save
+binding.pry
+

@@ -1,20 +1,23 @@
 - gems for aesthetics 
 - name for app 
 - music
+- create charitable 
 
 Menu Options
-1. We load up the game. The user is asked for Username and password. (You can create if it doesn’t exist).
-2. If the password doesn’t match you’re prompted to enter it again or create a new account 
+1. We load up the game. The user is asked for Username and password. (You can create if it doesn’t exist). -- This def login is in CLI 
+2. If the password doesn’t match you’re prompted to enter it again or create a new account
 3. Once logged in you’ll be able to
-    1. Play a game 
-    2. See your account balance
-    3. See what campaigns you've contributed to
+    1. Play a game  
+    2. See your account balance  -- Done 
+    3. See what campaigns you've contributed to -- Done 
     “You’ve chosen to play for this cause! Good choice!” 
     “You’ll be playing a game with x amount of rounds. At the end of each round you can choose to stop or keep playing” 
 4. 
 
 Gameplay:
-- Each time a user gets a question right, turn "correct"  boolean in GameClass to true 
+- If play game the next screen needs to be a list of charitable campaigns to play for
+
+Each time a user gets a question right, turn "correct"  boolean in GameClass to true 
     if they get question wrong, turn to false 
 
 Features: 
