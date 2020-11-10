@@ -1,4 +1,5 @@
 require_relative '../config/environment'
+require 'pry'
 
-app = Cli.new
+app = CLI.new
 app.run
