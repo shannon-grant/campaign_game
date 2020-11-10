@@ -31,9 +31,10 @@ def self.main_menu
     system('clear')
     menu_choices = {"Start Game": 1, "Check Balance": 2, "Check Charitable Campaigns": 3, "Delete Account": 4}
     #binding.pry
-    user_action = @@prompt.select("What would you like to do?", menu_choices)
+    user_action = @@prompt.select("What would you like to do? (Use ↑/↓ arrow keys, press Enter to select)", menu_choices)
         case user_action
         when 1
+            puts "You chose to start a game"
              self.play_game
         when 2
             user.check_balance
@@ -44,33 +45,58 @@ def self.main_menu
         end
 end 
 
+def self.play_game
+    user_action = @@prompt.select("Which charitable cause would you like to play for?") do |prompt|
+        prompt.choice "Clean Water"
+        prompt.choice "Poverty Alleviation"
+        prompt.choice "COVID Relief"
+        prompt.choice "World Peace"
+    end 
+
+    case user_action
+    when "Clean Water"
+       # binding.pry
+        puts "You chose to play for Clean Water!"
+    when "Poverty Alleviation"
+        puts "You chose to play for Poverty Alleviation!"
+    when "COVID Relief"
+        puts "You chose to play for COVID Relief!"
+    when "World Peace"
+        puts "You chose to play for World Peace!"
+    end 
+
+    campaign = user_action
+
+    Game.new(charitable_campaign: campaign)
+    #binding.pry
+end 
 
 
-def play_game
+# def play_game
 
-Game.new()
-    def create_a_game
+# Game.new()
+#     def create_a_game
 
-    end
+#     end
     
-    def game_won
+#     def game_won
 
-    end
+#     end
 
-    def game_lost
+#     def game_lost
 
-    end
+#     end
 
-end 
+# end 
 
-def login
+# def login
 
-end
+# end
 
-def main_menu
+# def main_menu
 
-end
+# end
 
-end 
+ end 
 
 
