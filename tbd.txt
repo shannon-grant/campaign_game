@@ -3,16 +3,44 @@
 - music
 - create charitable 
 
+
 Menu Options
-1. We load up the game. The user is asked for Username and password. (You can create if it doesn’t exist). -- This def login is in CLI 
-2. If the password doesn’t match you’re prompted to enter it again or create a new account
-3. Once logged in you’ll be able to
-    1. Play a game  
-    2. See your account balance  -- Done 
-    3. See what campaigns you've contributed to -- Done 
+1. We load up the game. We need a load screen.
+2. After load screen, a login screen asks the user for Username and password. (You can create if it doesn’t exist). -- This def login is in CLI (C)
+3. If the password doesn’t match you’re prompted to enter it again or create a new account - prompt.mask
+4. Once logged in you’ll have four options
+    1. Play a game  (U)
+    2. See your account balance  -- Done  (R)
+    3. See what campaigns you've contributed to -- Done (R) 
+    4. Delete Account (D) -- Done 
     “You’ve chosen to play for this cause! Good choice!” 
     “You’ll be playing a game with x amount of rounds. At the end of each round you can choose to stop or keep playing” 
-4. 
+
+
+
+We need: 
+C -- A def login method that creates a user with a password and account balance
+    Or that just logs the user in
+    - Create new game
+R -- both methods created we just need the def login_choices method 
+U -- Play game method 
+    - change Username/password
+    - up to 2 wrong, game over  (create wrong_count variable)
+    - if game won, increment account_balance by 5% if easy, 10% if medium, 15% if hard
+        -off reward, 
+    - if game lost, decrease account_balance by 15% if easy, 10% if medium, 5% if hard 
+    - Will need to include a breakif wrong_count = 2
+    - 6 rounds 
+    - Method 
+    - winnings variable to keep track   
+D -- Delete Account method -- Done
+
+
+We need to create a def login_choices with these four options 
+    that route to the different methods
+
+Play game method
+
 
 Gameplay:
 - If play game the next screen needs to be a list of charitable campaigns to play for
@@ -20,9 +48,14 @@ Gameplay:
 Each time a user gets a question right, turn "correct"  boolean in GameClass to true 
     if they get question wrong, turn to false 
 
+
 Features: 
 How many rounds?
 Cheating restrictions
     30 second timer?
     Way to stop them from looking the answers up? 
 See account balance is incremented by 10% of reward 
+
+Additonal Features:
+- 3 wrong in a row
+- timer

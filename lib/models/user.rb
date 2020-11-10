@@ -19,4 +19,8 @@ class User < ActiveRecord::Base
         end 
     end
 
+    def delete_account
+        self.destroy
+    end
+
 end
