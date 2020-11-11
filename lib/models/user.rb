@@ -14,13 +14,22 @@ class User < ActiveRecord::Base
     end 
 
     def campaign_contributions
-        self.my_campaigns.map do |g| 
-            if g.charitable_campaign
-            p "You've contributed $#{g.question.reward} to #{g.charitable_campaign}"
-            else 
-            p "You haven't contributed to any campaigns yet! Play a game to win money for charities."
+        
+        if self.my_campaigns.any? == true 
+            self.my_campaigns.map do |g| 
+            #binding.pry
+                if g.correct == true
+                p "You've contributed $#{g.question.reward} to #{g.charitable_campaign}"
+                else
+                #binding.pry 
+                #p "You haven't contributed to any campaigns yet! Play a game to win money for charities."
+                #binding.pry
+                end 
             end 
+        else 
+           p  "You havent played any games yet! Play a game to win money for a charity."
         end 
+
     end
 
 

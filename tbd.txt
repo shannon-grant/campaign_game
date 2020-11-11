@@ -3,7 +3,8 @@
 - music
 - create charitable 
 
-Fix Charitable Campaigns so it doesn't just point out a bunch of games
+Fix charitable_campaigns so that it looks better 
+and returns a messgae when you haven't won any games
 
 Menu Options
 1. We load up the game. We need a load screen.
