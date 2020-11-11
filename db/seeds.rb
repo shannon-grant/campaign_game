@@ -50,3 +50,4 @@ new_game = Game.new(charitable_campaign: "hunger", correct: true, user_id: new_u
 new_game.save
 binding.pry
 
+

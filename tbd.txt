@@ -59,3 +59,7 @@ See account balance is incremented by 10% of reward
 Additonal Features:
 - 3 wrong in a row
 - timer
+
+- Campaign contributions - needs to be fixed
+- Percentages
+- If fail game, can play again or go back to main menu
