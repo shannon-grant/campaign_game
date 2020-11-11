@@ -18,7 +18,7 @@ class CLI
 
     @@prompt = TTY::Prompt.new
     @@user = nil
-    
+    @@artii = Artii::Base.new #:font => 'slant'
 
 
     def run
@@ -27,9 +27,11 @@ class CLI
     end
 
     def welcome
-        puts "Hello! Welcome to Campaign Game!"
-        sleep(1)
+        a = Artii::Base.new
+        puts a.asciify("Hello! Welcome to Campaign Game!").colorize(:white)
+        sleep(1)             
     end
+
 
     def self.login_or_signup    
         user_action = @@prompt.select("Do you have an account?") do |prompt|
@@ -79,8 +81,9 @@ class CLI
 
     def self.main_menu
         #Should bring up the main menu 
+        #pid = fork{ exec 'mpg123','-q', music_zapsplat_no_pressure.mp3}
         system('clear')
-        menu_choices = {"Start Game": 1, "Check Balance": 2, "Check Charitable Campaigns": 3, "Delete Account": 4}
+        menu_choices = {"Start Game": 1, "Check Balance": 2, "Check Charitable Campaigns": 3, "Delete Account": 4, "Change Username": 5}
         #binding.pry
         user_action = @@prompt.select("What would you like to do? (Use ↑/↓ arrow keys, press Enter to select)", menu_choices)
             case user_action
@@ -102,6 +105,10 @@ class CLI
                 @@user.delete_account
                 sleep(2)
                 self.login_or_signup
+            when 5
+                @@user.change_username
+                sleep(2)
+                self.main_menu
             end
     end 
 
@@ -111,6 +118,7 @@ class CLI
             prompt.choice "Poverty Alleviation"
             prompt.choice "COVID Relief"
             prompt.choice "World Peace"
+            prompt.choice "Return to Main Menu"
         end 
     
         case user_action
@@ -128,6 +136,8 @@ class CLI
             puts "You chose to play for World Peace!"
             self.ask_question(user_action)
             #binding.pry
+        when "Return to Main Menu"
+            self.main_menu
         end 
         #binding.pry
     end 
@@ -202,6 +212,8 @@ class CLI
             end 
 
         end 
+ 
+        
         
         #ask a question & create a game 
         #increase account balance if correct & decrease if wrong

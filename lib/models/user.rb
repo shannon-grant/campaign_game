@@ -1,4 +1,6 @@
 require 'pry'
+@@prompt = TTY::Prompt.new
+
 class User < ActiveRecord::Base
     has_many :games
     has_many :questions, through: :games
@@ -35,6 +37,11 @@ class User < ActiveRecord::Base
 
     def delete_account
         self.destroy
+    end
+
+    def change_username
+        self.username = @@prompt.ask("New username:")
+        self.save
     end
 
 
