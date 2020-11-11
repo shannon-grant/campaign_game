@@ -117,14 +117,39 @@ class CLI
            # binding.pry
             puts "You chose to play for Clean Water!"
         when "Poverty Alleviation"
+            self.play_game(user_action)
             puts "You chose to play for Poverty Alleviation!"
         when "COVID Relief"
+            self.play_game(user_action)
             puts "You chose to play for COVID Relief!"
         when "World Peace"
+            self.play_game(user_action)
             puts "You chose to play for World Peace!"
+            self.play_game(user_action)
         end 
     
-        campaign = user_action
+
+    wrong_answers = 0
+    charity_money = 0
+    user_money = 0
+
+        def self.play_game(user_action)
+            while wrong_answers < 2
+            random_quest = Question.all.sample
+            Game.create(charitable_campaign: user_action, correct: nil, user_id: @@user.id, question_id: random_quest.id)
+            user_action = @@prompt.select(random_quest.prompt) do |prompt|
+                prompt.choice random_quest.option_1
+                prompt.choice random_quest.option_2
+                prompt.choice random_quest.answer
+                prompt.choice random_quest.option_3
+            end 
+            if user_action == random_quest.answer
+                puts "Correct! That question was worth $#{random_quest.reward}"
+                charity_money += random_quest.reward
+                
+            binding.pry
+            end 
+        end 
         
         #ask a question & create a game 
         #increase account balance if correct & decrease if wrong
@@ -139,6 +164,7 @@ class CLI
     #     #binding.pry
     #     end 
     end  
+    #binding.pry 
 
     #wrong_attempts = 0
     #total_winnings = 0

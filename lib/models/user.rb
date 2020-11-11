@@ -27,4 +27,5 @@ class User < ActiveRecord::Base
         self.destroy
     end
 
+
 end
