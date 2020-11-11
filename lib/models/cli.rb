@@ -117,24 +117,26 @@ class CLI
            # binding.pry
             puts "You chose to play for Clean Water!"
         when "Poverty Alleviation"
-            self.play_game(user_action)
+            self.ask_question(user_action)
             puts "You chose to play for Poverty Alleviation!"
         when "COVID Relief"
-            self.play_game(user_action)
+            self.ask_question(user_action)
             puts "You chose to play for COVID Relief!"
         when "World Peace"
-            self.play_game(user_action)
             puts "You chose to play for World Peace!"
-            self.play_game(user_action)
+            self.ask_question(user_action)
         end 
+        #binding.pry
+    end 
     
 
-    wrong_answers = 0
-    charity_money = 0
-    user_money = 0
+    @wrong_answers = 0
+    @charity_money = 0
+    @user_money = 0
+    @game_rounds = 0
 
-        def self.play_game(user_action)
-            while wrong_answers < 2
+        def self.ask_question(user_action)
+            while @wrong_answers < 2 && @game_rounds <= 6
             random_quest = Question.all.sample
             Game.create(charitable_campaign: user_action, correct: nil, user_id: @@user.id, question_id: random_quest.id)
             user_action = @@prompt.select(random_quest.prompt) do |prompt|
@@ -145,9 +147,25 @@ class CLI
             end 
             if user_action == random_quest.answer
                 puts "Correct! That question was worth $#{random_quest.reward}"
-                charity_money += random_quest.reward
-                
-            binding.pry
+                @charity_money += random_quest.reward
+                @user_money += (random_quest.reward * 0.10).to_f
+                @game_rounds += 1
+                self.ask_question(user_action)
+                #binding.pry
+            elsif user_action != random_quest.answer && @wrong_answers < 2
+                if @user_money > 0
+                    @user_money -= (random_quest.reward * 0.10).to_f
+                end 
+                @wrong_answers += 1
+                @game_rounds += 1
+                puts "Unfortunately that answer is wrong. The correct answer was #{random_quest.answer} You have #{2 - @wrong_answers} more try left."
+                self.ask_question(user_action)
+            else 
+                puts "Oooph! So close! The correct answer was #{random_quest.answer} You've run out of tries!"
+                puts "Returning to main menu..."
+                self.main_menu
+            end 
+            #binding.pry
             end 
         end 
         
@@ -162,8 +180,7 @@ class CLI
     #     while wrong_answers < 2
     #     Game.create(charitable_campaign: campaign, user_id: @@user.id)
     #     #binding.pry
-    #     end 
-    end  
+    #     end   
     #binding.pry 
 
     #wrong_attempts = 0
