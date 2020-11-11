@@ -63,7 +63,10 @@ class CLI
             @wrong_count += 1 
             self.login
         else
-            puts "Too Many Attempts"
+            puts "Too Many Attempts. Please create a new username and password."
+            puts "Returning to login screen..."
+            sleep(2)
+            self.login_or_signup
         end
     end
 
@@ -106,6 +109,12 @@ class CLI
     end 
 
     def self.play_game
+
+        if @@user.account_balance == nil 
+        @@user.account_balance = 0
+        @@user.save
+        end 
+
         user_action = @@prompt.select("Which charitable cause would you like to play for?") do |prompt|
             prompt.choice "Clean Water"
             prompt.choice "Poverty Alleviation"
