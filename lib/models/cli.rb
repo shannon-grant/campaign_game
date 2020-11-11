@@ -102,8 +102,12 @@ class CLI
                 system('clear')
                 self.main_menu
             when 4
+                puts "I'm sorry to see you go but I hope to see you again soon."
+                sleep(1)
+                puts "Deleting your account..."
                 @@user.delete_account
-                sleep(2)
+                puts "Returning you to the main menu..."
+                sleep(1)
                 self.login_or_signup
             end
     end 

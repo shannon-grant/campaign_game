@@ -16,9 +16,7 @@ class User < ActiveRecord::Base
     def won_games
         my_games = self.my_campaigns.select do |g| 
             g.correct == true
-            #binding.pry
         end 
-        #binding.pry
     end 
 
 
