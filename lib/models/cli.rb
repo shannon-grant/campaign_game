@@ -13,13 +13,7 @@ class CLI
 # - mulitiple choice
 # - mask for pwd
 
-#login_choices = [Play Game, Check Balance, Check Charitable Campaigns, Delete Account]
-#campaign_choices = [Clean Water, Poverty Alleviation, COVID Relief, World Peace]
-# For Menu
-# choices = {small: 1, medium: 2, large: 3}
-# prompt.select("What size?", choices)
-# For campaign choices
-#prompt.select("Choose your campaign", %w(Scorpion Kano Jax))
+
 def run
     system('clear')
     puts "Welcome to The Campaign game"
@@ -30,16 +24,15 @@ def self.main_menu
     #Should bring up the main menu 
     system('clear')
     menu_choices = {"Start Game": 1, "Check Balance": 2, "Check Charitable Campaigns": 3, "Delete Account": 4}
-    #binding.pry
     user_action = @@prompt.select("What would you like to do? (Use ↑/↓ arrow keys, press Enter to select)", menu_choices)
         case user_action
         when 1
             puts "You chose to start a game"
              self.play_game
         when 2
-            user.check_balance
+            @@user.check_balance
         when 3
-            user.campaign_contributions
+            @@user.campaign_contributions
         when 4
             user.delete_account
         end
@@ -55,7 +48,6 @@ def self.play_game
 
     case user_action
     when "Clean Water"
-       # binding.pry
         puts "You chose to play for Clean Water!"
     when "Poverty Alleviation"
         puts "You chose to play for Poverty Alleviation!"
@@ -68,7 +60,6 @@ def self.play_game
     campaign = user_action
 
     Game.new(charitable_campaign: campaign)
-    #binding.pry
 end 
 
 
