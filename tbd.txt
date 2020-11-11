@@ -3,6 +3,7 @@
 - music
 - create charitable 
 
+Fix Charitable Campaigns so it doesn't just point out a bunch of games
 
 Menu Options
 1. We load up the game. We need a load screen.

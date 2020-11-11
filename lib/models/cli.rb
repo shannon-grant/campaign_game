@@ -116,18 +116,21 @@ class CLI
         when "Clean Water"
            # binding.pry
             puts "You chose to play for Clean Water!"
+            self.ask_question(user_action)
         when "Poverty Alleviation"
-            self.ask_question(user_action)
             puts "You chose to play for Poverty Alleviation!"
-        when "COVID Relief"
             self.ask_question(user_action)
+        when "COVID Relief"
             puts "You chose to play for COVID Relief!"
+            self.ask_question(user_action)
         when "World Peace"
             puts "You chose to play for World Peace!"
             self.ask_question(user_action)
+            #binding.pry
         end 
         #binding.pry
     end 
+    #binding.pry
     
 
     @wrong_answers = 0
@@ -152,7 +155,7 @@ class CLI
                 @game_rounds += 1
                 self.ask_question(user_action)
                 #binding.pry
-            elsif user_action != random_quest.answer && @wrong_answers < 2
+            elsif user_action != random_quest.answer && @wrong_answers < 1
                 if @user_money > 0
                     @user_money -= (random_quest.reward * 0.10).to_f
                 end 
@@ -160,9 +163,10 @@ class CLI
                 @game_rounds += 1
                 puts "Unfortunately that answer is wrong. The correct answer was #{random_quest.answer} You have #{2 - @wrong_answers} more try left."
                 self.ask_question(user_action)
-            else 
+            else
                 puts "Oooph! So close! The correct answer was #{random_quest.answer} You've run out of tries!"
                 puts "Returning to main menu..."
+                sleep(2)
                 self.main_menu
             end 
             #binding.pry
