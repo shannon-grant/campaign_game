@@ -17,10 +17,11 @@ Shannon Grant
 Ekene Nkem-Mmekam
 
 A special shoutout to: 
-TTYPrompt 
-Artii 
-OpenTDB
-Active Record
-Our mothers 
+1) Our mothers 
+2) TTYPrompt 
+3) Artii 
+4) OpenTDB
+5) Active Record
+
 
 
