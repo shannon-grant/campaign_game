@@ -141,11 +141,8 @@ class CLI
         when "World Peace"
             puts "You chose to play for World Peace!"
             self.ask_question(user_action)
-            #binding.pry
         end 
-        #binding.pry
     end 
-    #binding.pry
     
 
     @wrong_answers = 0
@@ -153,7 +150,6 @@ class CLI
     @user_money = 0
     @game_rounds = 0
 
-    #Need to find a way to change Game.correct to true or false when someone gets it right or wrong 
 
         def self.ask_question(user_action)
             while @wrong_answers < 2 && @game_rounds <= 5
@@ -166,41 +162,40 @@ class CLI
                     prompt.choice random_quest.option_3
                 end 
                 if user_answer == random_quest.answer
-                puts "Correct! That question was worth $#{random_quest.reward}"
-                @charity_money += random_quest.reward
-                @@user.account_balance += (random_quest.reward * 0.10).to_f
-                @@user.save
-                @game_rounds += 1
-                current_game.correct = true
-                current_game.save
-                #binding.pry
-                self.ask_question(user_action)
+                    puts "Correct! That question was worth $#{random_quest.reward}"
+                    @charity_money += random_quest.reward
+                    @@user.account_balance += (random_quest.reward * 0.10).to_f
+                    @@user.save
+                    @game_rounds += 1
+                    current_game.correct = true
+                    current_game.save
+                    self.ask_question(user_action)
                 elsif user_answer != random_quest.answer && @wrong_answers < 1
                     if @@user.account_balance > 0
                         #we don't want negative values
                         @@user.account_balance -= (random_quest.reward * 0.10).to_f
                         @@user.save
                     end 
-                @wrong_answers += 1
-                @game_rounds += 1
-                current_game.correct = false
-                current_game.save
-                puts "Unfortunately that answer is wrong. The correct answer was #{random_quest.answer}. You have #{2 - @wrong_answers} more try left."
-                self.ask_question(user_action)
+                    @wrong_answers += 1
+                    @game_rounds += 1
+                    current_game.correct = false
+                    current_game.save
+                    puts "Unfortunately that answer is wrong. The correct answer was #{random_quest.answer}. You have #{2 - @wrong_answers} more try left."
+                    self.ask_question(user_action)
                 else
                     if @@user.account_balance > 0
                         #we don't want negative values
                         @@user.account_balance -= (random_quest.reward * 0.10).to_f
                         @@user.save
                     end 
-                puts "Oooph! So close! The correct answer was #{random_quest.answer} You've run out of tries!"
-                puts "Returning to main menu..."
-                sleep(3)
-                @wrong_answers = 0
-                @game_rounds = 0
-                current_game.correct = false
-                current_game.save
-                self.main_menu
+                    puts "Oooph! So close! The correct answer was #{random_quest.answer} You've run out of tries!"
+                    puts "Returning to main menu..."
+                    sleep(3)
+                    @wrong_answers = 0
+                    @game_rounds = 0
+                    current_game.correct = false
+                    current_game.save
+                    self.main_menu
                 end 
             end 
 
@@ -215,8 +210,6 @@ class CLI
         end 
         
 end
-
-# end
 
 
 
