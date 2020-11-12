@@ -22,14 +22,10 @@ class CLI
 
 
     def run
-        #play_music
+        self.class.music
         welcome
         self.class.login_or_signup
     end
-
-    # def play_music
-    #     pid = fork{exec 'afplay', "lib/music_zapsplat_no_pressure.mp3"} 
-    # end
 
     def welcome
         a = Artii::Base.new
@@ -92,8 +88,6 @@ class CLI
 
 
     def self.main_menu
-        #Should bring up the main menu 
-        #pid = fork{ exec 'mpg123','-q', music_zapsplat_no_pressure.mp3}
         system('clear')
         a = Artii::Base.new
         puts a.asciify("Campaign Game!").colorize(:white)
@@ -133,7 +127,6 @@ class CLI
     end 
 
     def self.play_game
-
         if @@user.account_balance == nil 
         @@user.account_balance = 0
         @@user.save
@@ -289,6 +282,10 @@ class CLI
            -mmmmmmmmmmh smmmmmmmmmm+                        ++        :s h`        s-             
            `+ooooooooo: -oooooooooo.                        .++++++++++- :++++++++++`       
            ".colorize(:red)
+        end
+
+        def self.music
+            pid = fork{ exec 'afplay', "lib/theme_song.mp3"}
         end
         
 end
