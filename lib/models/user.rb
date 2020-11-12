@@ -4,7 +4,13 @@ class User < ActiveRecord::Base
     has_many :questions, through: :games
 
     def check_balance
-        puts "Your account balance is #{self.account_balance}"
+        #binding.pry
+        if self.account_balance == nil
+        self.account_balance = 0    
+        puts "Your account balance is #{self.account_balance}. Play a game to win money!"
+        else
+        puts "Your account balance is #{self.account_balance}."
+        end
     end
 
     def my_campaigns
