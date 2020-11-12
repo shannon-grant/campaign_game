@@ -3,8 +3,7 @@
 - music
 - create charitable 
 
-Fix charitable_campaigns so that it looks better 
-and returns a messgae when you haven't won any games
+#Fix charitable_campaigns so that it looks better  -- Create some helper methods
 
 Menu Options
 1. We load up the game. We need a load screen.

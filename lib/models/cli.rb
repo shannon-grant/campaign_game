@@ -73,7 +73,10 @@ class CLI
             @wrong_count += 1 
             self.login
         else
-            puts "Too Many Attempts"
+            puts "Too Many Attempts. Please create a new username and password."
+            puts "Returning to login screen..."
+            sleep(2)
+            self.login_or_signup
         end
     end
 
@@ -103,6 +106,7 @@ class CLI
                  self.play_game
             when 2
                 @@user.check_balance
+                #binding.pry
                 sleep(3)
                 self.main_menu
             when 3
@@ -113,8 +117,12 @@ class CLI
                 system('clear')
                 self.main_menu
             when 4
+                puts "I'm sorry to see you go but I hope to see you again soon."
+                sleep(1)
+                puts "Deleting your account..."
                 @@user.delete_account
-                sleep(2)
+                puts "Returning you to the main menu..."
+                sleep(1)
                 self.login_or_signup
             when 5
                 @@user.change_username
@@ -125,6 +133,12 @@ class CLI
     end 
 
     def self.play_game
+
+        if @@user.account_balance == nil 
+        @@user.account_balance = 0
+        @@user.save
+        end 
+
         user_action = @@prompt.select("Which charitable cause would you like to play for?") do |prompt|
             prompt.choice "Clean Water"
             prompt.choice "Poverty Alleviation"
@@ -151,9 +165,7 @@ class CLI
         when "Return to Main Menu"
             self.main_menu
         end 
-        #binding.pry
     end 
-    #binding.pry
     
 
     @wrong_answers = 0
@@ -161,65 +173,88 @@ class CLI
     @user_money = 0
     @game_rounds = 0
 
-    #Need to find a way to change Game.correct to true or false when someone gets it right or wrong 
 
         def self.ask_question(user_action)
             while @wrong_answers < 2 && @game_rounds <= 5
             random_quest = Question.all.sample
             #binding.pry
             current_game = Game.create(charitable_campaign: user_action, correct: nil, user_id: @@user.id, question_id: random_quest.id)
-            user_answer = @@prompt.select(random_quest.prompt) do |prompt|
-                prompt.choice random_quest.option_1
-                prompt.choice random_quest.option_2
-                prompt.choice random_quest.answer
-                prompt.choice random_quest.option_3
-            end 
-            if user_answer == random_quest.answer
-                puts "Correct! That question was worth $#{random_quest.reward}"
-                @charity_money += random_quest.reward
-                @@user.account_balance += (random_quest.reward * 0.10).to_f
-                @@user.save
-                @game_rounds += 1
-                current_game.correct = true
-                current_game.save
-                #binding.pry
-                self.ask_question(user_action)
-                #binding.pry 
-            elsif user_answer != random_quest.answer && @wrong_answers < 1
-                if @@user.account_balance > 0
-                    #we don't want negative values
-                    @@user.account_balance -= (random_quest.reward * 0.10).to_f
-                    @@user.save
+                user_answer = @@prompt.select(random_quest.prompt) do |prompt|
+                    prompt.choice random_quest.option_1
+                    prompt.choice random_quest.option_2
+                    prompt.choice random_quest.answer
+                    prompt.choice random_quest.option_3
                 end 
-                @wrong_answers += 1
-                @game_rounds += 1
-                current_game.correct = false
-                current_game.save
-                puts "Unfortunately that answer is wrong. The correct answer was #{random_quest.answer}. You have #{2 - @wrong_answers} more try left."
-                self.ask_question(user_action)
-            else
-                #Game.correct = false
-                if @@user.account_balance > 0
-                    #we don't want negative values
-                    @@user.account_balance -= (random_quest.reward * 0.10).to_f
+
+                round_money = (random_quest.reward * 0.10).to_f
+
+                if user_answer == random_quest.answer
+                    puts "Correct! That question was worth $#{random_quest.reward}"
+                    sleep(1)
+                    puts "You earned $#{round_money} this round"
+                    sleep(1)
+                    #round_money = (random_quest.reward * 0.10).to_f
+                    @charity_money += random_quest.reward
+                    @@user.account_balance += round_money
                     @@user.save
+                    @game_rounds += 1
+                    @user_money += round_money
+                    current_game.correct = true
+                    current_game.save
+                    #@user_money += round_money
+                    puts "You've earned $#{@user_money} this game."
+                    sleep(1)
+                    self.ask_question(user_action)
+                elsif user_answer != random_quest.answer && @wrong_answers < 1
+                    #round_money = (random_quest.reward * 0.10).to_f
+                    @wrong_answers += 1
+                    @game_rounds += 1
+                    current_game.correct = false
+                    current_game.save
+                    puts "Unfortunately that answer is wrong. The correct answer was #{random_quest.answer}. You have #{2 - @wrong_answers} more try left."
+                    sleep(2)
+                    if @@user.account_balance > 0
+                        #we don't want negative values
+                        @@user.account_balance -= round_money
+                        @@user.save
+                        puts "You've lost #{round_money} this round"
+                        sleep(1)
+                    end 
+                    @user_money -= round_money
+                    puts "You've earned $#{@user_money} this game."
+                    sleep(1)
+                    self.ask_question(user_action)
+                else
+                    puts "Oooph! So close! The correct answer was #{random_quest.answer}."
+                    sleep(2)
+                    puts "You've run out of tries!"
+                    sleep(1)
+                    if @@user.account_balance > 0
+                        #we don't want negative values
+                        @@user.account_balance -= (random_quest.reward * 0.10).to_f
+                        @@user.save
+                        puts "You've lost #{round_money} this round"
+                        sleep(1)
+                    end 
+                    #puts "You lost #{round_money}"
+                    puts "You've earned $#{@user_money} this game."
+                    sleep(1)
+                    puts "Returning to main menu..."
+                    sleep(3)
+                    @wrong_answers = 0
+                    @game_rounds = 0
+                    @user_money = 0
+                    current_game.correct = false
+                    current_game.save
+                    self.main_menu
                 end 
-                puts "Oooph! So close! The correct answer was #{random_quest.answer} You've run out of tries!"
-                puts "Returning to main menu..."
-                sleep(3)
-                @wrong_answers = 0
-                current_game.correct = false
-                current_game.save
-                self.main_menu
-            end 
-            #@@user.account_balance += @user_money
-            #binding.pry
             end 
 
             if @game_rounds > 5
                 puts "Congratulations! You've made it past all #{@game_rounds} rounds."
                 puts "Returning to main menu..."
                 @game_rounds = 0
+                @user_money = 0
                 sleep(3)
                 self.main_menu
             end
@@ -255,66 +290,7 @@ class CLI
            ".colorize(:red)
         end
         
-        #ask a question & create a game 
-        #increase account balance if correct & decrease if wrong
-        # Each time a user gets a question right, turn "correct"  boolean in GameClass to true 
-        # if they get question wrong, turn to false 
-        # There are 6 games in total
-        # You can only get 2 wrong
-
-    # wrong_answers = 0
-    #     while wrong_answers < 2
-    #     Game.create(charitable_campaign: campaign, user_id: @@user.id)
-    #     #binding.pry
-    #     end   
-    #binding.pry 
-
-    #wrong_attempts = 0
-    #total_winnings = 0
-
-    #def give_prompt
-
-        #if wrong_attempts < 2 && answer == right 
-        #puts "That's correct!"
-        #puts "That is worth $#{question.reward}"
-        #game.correct = true
-        #total_winnings += (question.reward/percentage we specified) -- We need a method for this 
-        #self.give_prompt
-
-        #elsif answer == wrong && wrong_attempts <2
-        #puts "That answer is incorrect!"
-        #total_winngings -= (question.reward/percentage we specified)
-        #wrong_attempts += 1
-
-        #else
-        #puts "You're all out of attempts!"
-        #puts "Returning you to main menu"
-        #end 
-
-    #end 
-
-    
-
-
-
-
-    # def play_game
-
-    #     def create_a_game
-
-    #     end
-
-    #     def game_won
-
-    #     end
-
-    #     def game_lost
-
-    #     end
-
-    # end 
 end
-
 
 
 
