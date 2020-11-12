@@ -237,6 +237,7 @@ class CLI
                         sleep(1)
                     end 
                     #puts "You lost #{round_money}"
+                    @user_money -= round_money
                     puts "You've earned $#{@user_money} this game."
                     sleep(1)
                     puts "Returning to main menu..."
