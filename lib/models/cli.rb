@@ -22,16 +22,22 @@ class CLI
 
 
     def run
+        #play_music
         welcome
         self.class.login_or_signup
     end
 
+    # def play_music
+    #     pid = fork{exec 'afplay', "lib/music_zapsplat_no_pressure.mp3"} 
+    # end
+
     def welcome
         a = Artii::Base.new
-        puts a.asciify("Hello! Welcome to Campaign Game!").colorize(:white)
-        sleep(1)             
+        puts a.asciify(" Welcome to Campaign Game!").colorize(:white)
+        self.class.charity_hands
+        sleep(1)                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     end
-
+    
 
     def self.login_or_signup    
         user_action = @@prompt.select("Do you have an account?") do |prompt|
@@ -73,7 +79,8 @@ class CLI
         uname = @@prompt.ask("Please Enter Your Username:")
         pword = @@prompt.mask("Please Enter Your Password:")
         @@user = User.create(username: uname, password: pword)
-        puts "Welcome #{@@user.username.capitalize}!"
+        #puts "Welcome #{@@user.username.capitalize}!"
+        system `say "Welcome #{@@user.username}!"`
         system('clear')
         self.main_menu
     end
@@ -83,6 +90,8 @@ class CLI
         #Should bring up the main menu 
         #pid = fork{ exec 'mpg123','-q', music_zapsplat_no_pressure.mp3}
         system('clear')
+        a = Artii::Base.new
+        puts a.asciify("Campaign Game!").colorize(:white)
         menu_choices = {"Start Game": 1, "Check Balance": 2, "Check Charitable Campaigns": 3, "Delete Account": 4, "Change Username": 5}
         #binding.pry
         user_action = @@prompt.select("What would you like to do? (Use ↑/↓ arrow keys, press Enter to select)", menu_choices)
@@ -110,6 +119,7 @@ class CLI
                 sleep(2)
                 self.main_menu
             end
+
     end 
 
     def self.play_game
@@ -154,14 +164,15 @@ class CLI
         def self.ask_question(user_action)
             while @wrong_answers < 2 && @game_rounds <= 5
             random_quest = Question.all.sample
+            #binding.pry
             current_game = Game.create(charitable_campaign: user_action, correct: nil, user_id: @@user.id, question_id: random_quest.id)
-            user_action = @@prompt.select(random_quest.prompt) do |prompt|
+            user_answer = @@prompt.select(random_quest.prompt) do |prompt|
                 prompt.choice random_quest.option_1
                 prompt.choice random_quest.option_2
                 prompt.choice random_quest.answer
                 prompt.choice random_quest.option_3
             end 
-            if user_action == random_quest.answer
+            if user_answer == random_quest.answer
                 puts "Correct! That question was worth $#{random_quest.reward}"
                 @charity_money += random_quest.reward
                 @@user.account_balance += (random_quest.reward * 0.10).to_f
@@ -169,10 +180,10 @@ class CLI
                 @game_rounds += 1
                 current_game.correct = true
                 current_game.save
-                binding.pry
+                #binding.pry
                 self.ask_question(user_action)
                 #binding.pry 
-            elsif user_action != random_quest.answer && @wrong_answers < 1
+            elsif user_answer != random_quest.answer && @wrong_answers < 1
                 if @@user.account_balance > 0
                     #we don't want negative values
                     @@user.account_balance -= (random_quest.reward * 0.10).to_f
@@ -209,11 +220,38 @@ class CLI
                 @game_rounds = 0
                 sleep(3)
                 self.main_menu
-            end 
-
+            end
         end 
  
-        
+       
+        def self.charity_hands
+
+            puts "                                                                                             
+            ./ossso/-`    ./ossso/-`                        `-:/++//:.    `-://+//:.              
+          -ydmmmmmmmdy/`:ydmmmmmmmdy:                      :o:.`   `./o-`/+:.`   `./o-            
+         :dmmmmmmmmmmmmydmmmmmmmmmmmd+                    ++`         `/+:          `s:           
+  `..    hmmmmmmmmmmmmmmmmmmmmmmmmmmmd`   ..`      `..   `h                          .h    ..`    
+ `ymd+  `mmmmmmmmmmmmmmmmmmmmmmmmmmmmm:  -dmh.    .s:s-  :s                           h`  ++:y`   
+ :mmmy   dmmmmmmmmmmmmmmmmmmmmmmmmmmmm.  ommm+    +/ /o  .y                           d   y. s:   
+ +mmmy   ommmmmmmmmmmmmmmmmmmmmmmmmmmh   ommms    s- :o   y.                         /o   y. ++   
+ +mmmh   `hmmmmmmmmmmmmmmmmmmmmmmmmmd-   smmmy    y. :s   -s`                       -y`   h` /+   
+ +mmmm`   `sdmmmmmmmmmmmmmmmmmmmmmmh-    hmmmy    y. .y    -s-                     /s`   `d  /+   
+ +mmmm- .:-`/hmmmmmmmmmmmmmmmmmmmd+`.:- `dmmms    s-  h` -:.`+o.                 -o/`.:. -s  +/   
+ .dmmms ymmho-/hdmmmmmmmmmmmmmmh+-+hmmd`+mmmm/    /o  ++`h-/o+-+o-            `:o/-++:/y s:  y.   
+  ommmmo.smmmmy:-odmmmmmmmmmds:-sdmmmh-/dmmmy      y- `s/-s: .+o-:o+.       -++-:o/` /s.o+  ++    
+   smmmmd+:ymmmmy:`:odmmmds/`-smmmmh//hmmmmy`      `y-  -s//s: `/o-`/++-.:++:`:s:  /s:+o.  /s     
+    +mmmmmd/:dmmmmh:  ./-  -ymmmmd/-hmmmmms`        `s/   :s-/s  `/s-  -/.  :s:  `y:/s-  `o+      
+     -hmmmmmhdmmmmmms     +mmmmmmdymmmmmd:            :s`   +oo    `o+     s/    .oo:   -y-       
+      `smmmmmmmmmmmmm+   :mmmmmmmmmmmmmh.              .y-           s:   ++           /s`        
+        +mmmmmmmmmmmmd`  hmmmmmmmmmmmms`                `s/          .h  `h           o+          
+         /dmmmmmmmmmmm+ -mmmmmmmmmmmmo                    o+          s- ++          o/           
+          :dmmmmmmmmmmy +mmmmmmmmmmm+                      ++         /+ y.        `s:            
+           /mmmmmmmmmmh smmmmmmmmmms                        o:        :s h`        o/             
+           -mmmmmmmmmmh smmmmmmmmmm+                        ++        :s h`        s-             
+           -mmmmmmmmmmh smmmmmmmmmm+                        ++        :s h`        s-             
+           `+ooooooooo: -oooooooooo.                        .++++++++++- :++++++++++`       
+           "
+        end
         
         #ask a question & create a game 
         #increase account balance if correct & decrease if wrong
