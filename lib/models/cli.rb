@@ -33,7 +33,7 @@ class CLI
 
     def welcome
         a = Artii::Base.new
-        puts a.asciify(" Welcome to Campaign Game!").colorize(:white)
+        puts a.asciify(" Welcome to Campaign Game!").bold.colorize(:white)
         self.class.charity_hands
         sleep(1)                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     end
@@ -63,9 +63,11 @@ class CLI
         
         @@user = User.find_by(username: uname, password: pword)
         if @@user
+            system `say "Welcome Back #{@@user.username}!"`
             system('clear')
             self.main_menu
             puts "Welcome Back #{@@user.username.capitalize}!"
+           
         elsif @wrong_count < 3
             puts "Invalid username or password"
             @wrong_count += 1 
@@ -79,7 +81,7 @@ class CLI
         uname = @@prompt.ask("Please Enter Your Username:")
         pword = @@prompt.mask("Please Enter Your Password:")
         @@user = User.create(username: uname, password: pword)
-        #puts "Welcome #{@@user.username.capitalize}!"
+        puts "Welcome #{@@user.username.capitalize}!"
         system `say "Welcome #{@@user.username}!"`
         system('clear')
         self.main_menu
@@ -250,7 +252,7 @@ class CLI
            -mmmmmmmmmmh smmmmmmmmmm+                        ++        :s h`        s-             
            -mmmmmmmmmmh smmmmmmmmmm+                        ++        :s h`        s-             
            `+ooooooooo: -oooooooooo.                        .++++++++++- :++++++++++`       
-           "
+           ".colorize(:red)
         end
         
         #ask a question & create a game 

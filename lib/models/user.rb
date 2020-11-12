@@ -6,6 +6,9 @@ class User < ActiveRecord::Base
     has_many :questions, through: :games
 
     def check_balance
+        if self.account_balance == nil
+            self.account_balance = 0
+        end
         puts "Your account balance is #{self.account_balance}"
     end
 
