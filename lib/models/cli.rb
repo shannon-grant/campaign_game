@@ -161,38 +161,65 @@ class CLI
                     prompt.choice random_quest.answer
                     prompt.choice random_quest.option_3
                 end 
+
+                round_money = (random_quest.reward * 0.10).to_f
+
                 if user_answer == random_quest.answer
                     puts "Correct! That question was worth $#{random_quest.reward}"
+                    sleep(1)
+                    puts "You earned $#{round_money} this round"
+                    sleep(1)
+                    #round_money = (random_quest.reward * 0.10).to_f
                     @charity_money += random_quest.reward
-                    @@user.account_balance += (random_quest.reward * 0.10).to_f
+                    @@user.account_balance += round_money
                     @@user.save
                     @game_rounds += 1
+                    @user_money += round_money
                     current_game.correct = true
                     current_game.save
+                    #@user_money += round_money
+                    puts "You've earned $#{@user_money} this game."
+                    sleep(1)
                     self.ask_question(user_action)
                 elsif user_answer != random_quest.answer && @wrong_answers < 1
-                    if @@user.account_balance > 0
-                        #we don't want negative values
-                        @@user.account_balance -= (random_quest.reward * 0.10).to_f
-                        @@user.save
-                    end 
+                    #round_money = (random_quest.reward * 0.10).to_f
                     @wrong_answers += 1
                     @game_rounds += 1
                     current_game.correct = false
                     current_game.save
                     puts "Unfortunately that answer is wrong. The correct answer was #{random_quest.answer}. You have #{2 - @wrong_answers} more try left."
+                    sleep(2)
+                    if @@user.account_balance > 0
+                        #we don't want negative values
+                        @@user.account_balance -= round_money
+                        @@user.save
+                        puts "You've lost #{round_money} this round"
+                        sleep(1)
+                    end 
+                    @user_money -= round_money
+                    puts "You've earned $#{@user_money} this game."
+                    sleep(1)
                     self.ask_question(user_action)
                 else
+                    puts "Oooph! So close! The correct answer was #{random_quest.answer}."
+                    sleep(2)
+                    puts "You've run out of tries!"
+                    sleep(1)
                     if @@user.account_balance > 0
                         #we don't want negative values
                         @@user.account_balance -= (random_quest.reward * 0.10).to_f
                         @@user.save
+                        puts "You've lost #{round_money} this round"
+                        sleep(1)
                     end 
-                    puts "Oooph! So close! The correct answer was #{random_quest.answer} You've run out of tries!"
+                    #puts "You lost #{round_money}"
+                    puts "You've earned $#{@user_money} this game."
+                    sleep(1)
                     puts "Returning to main menu..."
                     sleep(3)
                     @wrong_answers = 0
                     @game_rounds = 0
+                    @user_money = 0
                     current_game.correct = false
                     current_game.save
                     self.main_menu
@@ -203,6 +230,7 @@ class CLI
                 puts "Congratulations! You've made it past all #{@game_rounds} rounds."
                 puts "Returning to main menu..."
                 @game_rounds = 0
+                @user_money = 0
                 sleep(3)
                 self.main_menu
             end 

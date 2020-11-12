@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
             self.won_games.map do |g| 
                  all_contributions += g.question.reward 
                 p "You've contributed $#{g.question.reward} to #{g.charitable_campaign}"
-                sleep(2)
+                sleep(1)
             end 
             p "Overall, you've given $#{all_contributions} to charity. You're a hero!"
         elsif self.my_campaigns.any? == false
