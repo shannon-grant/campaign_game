@@ -22,7 +22,6 @@ class CLI
 
 
     def run
-        self.class.music
         welcome
         self.class.login_or_signup
     end
@@ -282,10 +281,6 @@ class CLI
            -mmmmmmmmmmh smmmmmmmmmm+                        ++        :s h`        s-             
            `+ooooooooo: -oooooooooo.                        .++++++++++- :++++++++++`       
            ".colorize(:red)
-        end
-
-        def self.music
-            pid = fork{ exec 'afplay', "lib/theme_song.mp3"}
         end
         
 end
