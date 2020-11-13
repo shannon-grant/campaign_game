@@ -2,18 +2,7 @@ require 'tty-prompt'
 require 'pry'
 require 'rest-client'  
 require 'json'
-# - login
-# - menu
-# - mulitiple choice
-# - mask for pwd
 
-#login_choices = [Play Game, Check Balance, Check Charitable Campaigns, Delete Account]
-#campaign_choices = [Clean Water, Poverty Alleviation, COVID Relief, World Peace]
-# For Menu
-# choices = {small: 1, medium: 2, large: 3}
-# prompt.select("What size?", choices)
-# For campaign choices
-#prompt.select("Choose your campaign", %w(Scorpion Kano Jax))
 class CLI
 
     @@prompt = TTY::Prompt.new
@@ -91,7 +80,6 @@ class CLI
         a = Artii::Base.new
         puts a.asciify("Campaign Game!").colorize(:white)
         menu_choices = {"Start Game": 1, "Check Balance": 2, "Check Charitable Campaigns": 3, "Delete Account": 4, "Change Username": 5}
-        #binding.pry
         user_action = @@prompt.select("What would you like to do? (Use ↑/↓ arrow keys, press Enter to select)", menu_choices)
             case user_action
             when 1
@@ -99,13 +87,10 @@ class CLI
                  self.play_game
             when 2
                 @@user.check_balance
-                #binding.pry
                 sleep(3)
                 self.main_menu
             when 3
-                #binding.pry
                 @@user.campaign_contributions
-                #binding.pry
                 sleep(5)
                 system('clear')
                 self.main_menu
@@ -141,7 +126,6 @@ class CLI
     
         case user_action
         when "Clean Water"
-           # binding.pry
             puts "You chose to play for Clean Water!"
             self.ask_question(user_action)
         when "Poverty Alleviation"
@@ -153,7 +137,6 @@ class CLI
         when "World Peace"
             puts "You chose to play for World Peace!"
             self.ask_question(user_action)
-            #binding.pry
         when "Return to Main Menu"
             self.main_menu
         end 
@@ -169,7 +152,6 @@ class CLI
         def self.ask_question(user_action)
             while @wrong_answers < 2 && @game_rounds <= 5
             random_quest = Question.all.sample
-            #binding.pry
             current_game = Game.create(charitable_campaign: user_action, correct: nil, user_id: @@user.id, question_id: random_quest.id)
                 user_answer = @@prompt.select(random_quest.prompt) do |prompt|
                     prompt.choice random_quest.option_1
@@ -185,7 +167,6 @@ class CLI
                     sleep(1)
                     puts "You earned $#{round_money} this round"
                     sleep(1)
-                    #round_money = (random_quest.reward * 0.10).to_f
                     @charity_money += random_quest.reward
                     @@user.account_balance += round_money
                     @@user.save
@@ -193,12 +174,10 @@ class CLI
                     @user_money += round_money
                     current_game.correct = true
                     current_game.save
-                    #@user_money += round_money
                     puts "You've earned $#{@user_money} this game."
                     sleep(1)
                     self.ask_question(user_action)
                 elsif user_answer != random_quest.answer && @wrong_answers < 1
-                    #round_money = (random_quest.reward * 0.10).to_f
                     @wrong_answers += 1
                     @game_rounds += 1
                     current_game.correct = false
