@@ -2,6 +2,11 @@ CAMPAIGN GAME:
 
 An app where users can answer trivia style questions to contribute money to their favorite charitable causes. In the process, users can also make money for themselves.
 
+Installation
+1) Clone the repository
+2) Navigate to the campaign game folder in your terminal
+3) Run bundle install to update necessary gems
+4) Enter ruby bin/run.rb into the command line of your terminal to start 
 
 User stories: 
 
