@@ -177,17 +177,11 @@ class CLI
         def self.ask_question(user_action)
             while @wrong_answers < 2 && @game_rounds <= 5
             random_quest = Question.all.sample
-            #binding.pry
             current_game = Game.create(charitable_campaign: user_action, correct: nil, user_id: @@user.id, question_id: random_quest.id)
-                user_answer = @@prompt.select(random_quest.prompt) do |prompt|
-                    prompt.choice random_quest.option_1
-                    prompt.choice random_quest.option_2
-                    prompt.choice random_quest.answer
-                    prompt.choice random_quest.option_3
-                end 
-
+            answers = [random_quest.option_1, random_quest.option_2, random_quest.answer, random_quest.option_3
+            ].shuffle
+                user_answer = @@prompt.select(random_quest.prompt, answers)
                 round_money = (random_quest.reward * 0.10).to_f
-
                 if user_answer == random_quest.answer
                     puts "Correct! That question was worth $#{random_quest.reward}"
                     sleep(1)
